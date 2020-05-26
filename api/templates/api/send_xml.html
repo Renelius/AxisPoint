@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>send_xml</title>
+    </head>
+    <body>
+        <form method="post">
+	    {% csrf_token %}
+	        <table>
+		        {{ form }}
+	        </table>
+	        <input type="submit" value="Скачать данные">
+        </form>
+    </body>
+</html>

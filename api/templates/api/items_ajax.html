@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="csrf-token" content="{{ csrf_token }}">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <title>send_xml</title>
+    </head>
+    <body>
+        <form method="post">
+	    {% csrf_token %}
+            {{ field.auto_id }}
+	        <table>
+		        {{ form }}
+	        </table>
+
+        </form>
+        <input type="submit" value="Получить данные" id="button">
+        <div id="list"></div>
+    <script>
+        window.onload = function(){
+             $.ajax({
+                type: 'GET',
+                url: 'ajax_response',
+                success: function(data){
+                console.log(data);
+                console.log(typeof(data));
+                var s='<ul>';
+                for(i=0; i<data.length; i++){
+                 s += "<li>" + data[i].category+'; '+data[i].from_items+'\
+                 ; '+ data[i].title+ '; '+ data[i].text+ '\
+                 ; '+data[i].thedate+'; '+ data[i].id_items+'</li>';
+                }
+                s += '</ul>';
+                $('#list').html(s);
+                }
+                });
+
+                function getCookie(name) {
+                    var cookieValue = null;
+                    if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                    }
+                    }
+                    }
+                    return cookieValue;
+                    }
+var csrftoken = getCookie('csrftoken');
+
+                $('#button').click(function(){
+                var data1 = JSON.stringify({'date1_day': $('#id_date1_day').val(),
+                'date1_month': $('#id_date1_month').val(), 'date1_year': $('#id_date1_year').val(),
+                'date2_day': $('#id_date2_day').val(),'date2_month': $('#id_date2_month').val(),
+                'date2_year': $('#id_date2_year').val()});
+                console.log(data1);
+                $.ajax({
+                type: 'POST',
+                url: 'ajax_response',
+                headers: {'X-CSRFToken':csrftoken},
+                data: data1,
+                contentType: 'application/json',
+                cache: false,
+                success: function(data){
+                console.log(data);
+                console.log(typeof(data));
+                var s='<ul>';
+                for(i=0; i<data.length; i++){
+                 s += "<li>" + data[i].category+'; '+data[i].from_items+'\
+                 ; '+ data[i].title+ '; '+ data[i].text+ '\
+                 ; '+data[i].thedate+'; '+ data[i].id_items+'</li>';
+                }
+                s += '</ul>';
+                $('#list').html(s);
+                },
+                });
+                });
+
+                return false;
+ };
+    </script>
+    </body>
+</html>
